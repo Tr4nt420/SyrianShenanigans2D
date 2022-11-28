@@ -36,7 +36,8 @@ class Weapon(Instance):
 
 
     def shoot(self, pos: tuple):
-        if (time.time()-self.lastTimeFired) >= (60/self.rateOfFire) and self.parent:
+        now = time.time()
+        if (now-self.lastTimeFired) >= (60/self.rateOfFire) and self.parent:
             x, y = pos[0], pos[1]
             spread = math.radians(ran.randint(-self.spread, self.spread))
             dx, dy = get_direction(x, self.rect.x, y, self.rect.y)
@@ -45,11 +46,9 @@ class Weapon(Instance):
             newProjectile = Projectile(self.bullet_sprite, xPos, yPos, self.screen,
                                        dx+spread, dy+spread, self.maxDistance)
 
-            dir = math.degrees(math.atan2(dx+spread, dy+spread))
-
             newProjectile.image = pygame.transform.rotate(newProjectile.originalimage, math.degrees(math.atan2(dx,dy))+self.degree)
             self.listOfProjectiles.append(newProjectile)
-            self.lastTimeFired = time.time()
+            self.lastTimeFired = now
 
     def update_projectiles(self, dt, collideGroup):
         for p in self.listOfProjectiles:
