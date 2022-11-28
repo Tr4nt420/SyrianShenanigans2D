@@ -15,14 +15,14 @@ import random as ra
 
 import math
 
-
+DEBUG = False
 clock = pygame.time.Clock()
 lastTick = 0
 
 pygame.init()
 pygame.font.init()
 
-DISPLAYSURF = pygame.display.set_mode((0,0))
+DISPLAYSURF = pygame.display.set_mode((0,0)) if not DEBUG else pygame.display.set_mode((600,400))
 
 allowedInput = {"movementKeys": [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], 
                 "spawnNewEnemy": pygame.K_f,
@@ -39,7 +39,7 @@ Weapons["WeirdGun"] = lambda: Weapon("Weapons/WeirdGun/weapon.png", 0, 0, DISPLA
                 degree = 90, 
                 rateOfFire= 860,
                 maxDistance = 1000,
-                spread = 8,
+                spread = 8 if not DEBUG else 0,
                 minDamage = 35,
                 maxDamage = 50,
                 speed = 3000,
@@ -165,7 +165,7 @@ while True:
                 Layout.remove(i)
             isMenuOn = False
         if not isSpawnedInitialEnemies:
-            for i in range(5):
+            for i in range(5 if not DEBUG else 0):
                 spawnEnemy()
             isSpawnedInitialEnemies = True
         if len(Player.listOfPlayers) > 0:
