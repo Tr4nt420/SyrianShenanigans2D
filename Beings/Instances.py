@@ -14,7 +14,7 @@ class Instance:
         self.image = pygame.image.load(image).convert_alpha()
         self.originalimage = self.image
         self.rect = self.image.get_rect(center=(self.x, self.y))
-        self.ix, self.iy = self.image.get_size()
+        self.ix, self.iy = self.originalimage.get_size()
         self.screen = screen
         self.sx, self.sy = self.screen.get_size()
         if "Projectile" not in str(type(self)):

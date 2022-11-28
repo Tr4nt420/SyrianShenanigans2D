@@ -15,14 +15,13 @@ import random as ra
 
 import math
 
-
+DEBUG = False
 clock = pygame.time.Clock()
-lastTick = 0
 
 pygame.init()
 pygame.font.init()
 
-DISPLAYSURF = pygame.display.set_mode((0,0))
+DISPLAYSURF = pygame.display.set_mode((0,0), pygame.FULLSCREEN) if not DEBUG else pygame.display.set_mode((600,400))
 
 allowedInput = {"movementKeys": [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], 
                 "spawnNewEnemy": pygame.K_f,
@@ -30,7 +29,6 @@ allowedInput = {"movementKeys": [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d]
                "changeEquipSlot": [pygame.K_1, pygame.K_2, pygame.K_3]}
 
 x, y = DISPLAYSURF.get_size()
-(x, y)
 
 #Weapons
 Weapons = {}
@@ -39,7 +37,7 @@ Weapons["WeirdGun"] = lambda: Weapon("Weapons/WeirdGun/weapon.png", 0, 0, DISPLA
                 degree = 90, 
                 rateOfFire= 860,
                 maxDistance = 1000,
-                spread = 8,
+                spread = 8 if not DEBUG else 0,
                 minDamage = 35,
                 maxDamage = 50,
                 speed = 3000,
@@ -78,12 +76,13 @@ textConfig = {"font" : "dejavusans",
               "appearanceTime" : 3,
               "fontSize" : 15,
               "colour": (255,255,255)}
+fps = 0
               
 chancesOfMultiplying = 0.10             
 
 listOfPotions = ["Healing Potion", "Speed Potion", "Damage Potion"]
 def healingPotionPickup(self, player):
-    player.health += 25
+    player.health += 50
     return True
     
 def speedPotionPickup(self, player):
@@ -117,7 +116,9 @@ def Start():
     elTextConf["appearanceTime"] = math.inf
     elTextConf["colour"] = (0,0,0)
     elTextConf["description"] = "Chance"
-    z= Layout("topright",y*0.03, DISPLAYSURF, elText, **elTextConf)
+    Layout("topright",y*0.03, DISPLAYSURF, elText, **elTextConf)
+    elTextConf['description'] = "FramePerSec"
+    Layout("topright", y*0.06, DISPLAYSURF, f"FPS: {int(fps)}", **elTextConf)
     isStarted = True
     
 def Menu():
@@ -165,7 +166,7 @@ while True:
                 Layout.remove(i)
             isMenuOn = False
         if not isSpawnedInitialEnemies:
-            for i in range(5):
+            for i in range(5 if not DEBUG else 0):
                 spawnEnemy()
             isSpawnedInitialEnemies = True
         if len(Player.listOfPlayers) > 0:
@@ -263,7 +264,6 @@ while True:
         if isMouseDown:     
             if player.currentWeapon:
                 player.currentWeapon.shoot(pygame.mouse.get_pos())
-        player.update(dt)
 
     if not running:
         pygame.quit()
@@ -276,10 +276,8 @@ while True:
         if isinstance(i, Weapon):
             i.update_to_parent()
             i.update_projectiles(dt, Enemy.listOfEnemies)
-            i.update(dt)
         elif isinstance(i, Enemy):
             i.move_towards_player(player, dt)
-            i.update(dt)
             for tl in i.textList:
                 txtsurf = tl.copy()
                 text_alpha = pygame.Surface(txtsurf.get_size(), pygame.SRCALPHA)
@@ -293,6 +291,9 @@ while True:
     for t in Layout.listOfLayouts:
         if t.description == "Chance":
             t.textContent = f"Chances of enemies multiplying on killed: {int(chancesOfMultiplying*100)}%"
+        elif t.description == "FramePerSec":
+            t.textContent = f"FPS: {int(fps)}"
+        #print(t.textContent)
         t.update()
     #health and enemy counter
     if isStarted and player:
@@ -303,6 +304,6 @@ while True:
         DISPLAYSURF.blit(healthLabel, (0,0))
 
         
-        
+    fps = clock.get_fps()  
     pygame.display.update()
     
