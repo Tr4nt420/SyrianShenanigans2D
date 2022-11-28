@@ -40,27 +40,14 @@ class Weapon(Instance):
             x, y = pos[0], pos[1]
             spread = math.radians(ran.randint(-self.spread, self.spread))
             dx, dy = get_direction(x, self.rect.x, y, self.rect.y)
-            angle = math.atan2(dx, dy)
-            if not self.isFlipped:
-                xPos = self.rect.x+(dx*(self.ix))
-            else:
-                xPos = self.rect.x+(dx*(self.ix/2))
-            if math.degrees(angle) > -90 and math.degrees(angle) < 90:
-                yPos = self.rect.y+(dy*2*self.iy)
-            else:
-                yPos = self.rect.y+(dy*self.iy)
-
-
-
-
-
+            xPos = self.rect.x+(self.ix*dx)+self.ix/2
+            yPos = self.rect.y+(self.iy*dy)+self.iy/3
             newProjectile = Projectile(self.bullet_sprite, xPos, yPos, self.screen,
                                        dx+spread, dy+spread, self.maxDistance)
 
-
             dir = math.degrees(math.atan2(dx+spread, dy+spread))
 
-            newProjectile.image = pygame.transform.rotate(newProjectile.originalimage, self.degree+dir)
+            newProjectile.image = pygame.transform.rotate(newProjectile.originalimage, math.degrees(math.atan2(dx,dy))+self.degree)
             self.listOfProjectiles.append(newProjectile)
             self.lastTimeFired = time.time()
 
