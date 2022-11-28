@@ -22,7 +22,7 @@ lastTick = 0
 pygame.init()
 pygame.font.init()
 
-DISPLAYSURF = pygame.display.set_mode((0,0)) if not DEBUG else pygame.display.set_mode((600,400))
+DISPLAYSURF = pygame.display.set_mode((0,0), pygame.FULLSCREEN) if not DEBUG else pygame.display.set_mode((600,400))
 
 allowedInput = {"movementKeys": [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d], 
                 "spawnNewEnemy": pygame.K_f,
@@ -30,7 +30,6 @@ allowedInput = {"movementKeys": [pygame.K_w, pygame.K_s, pygame.K_a, pygame.K_d]
                "changeEquipSlot": [pygame.K_1, pygame.K_2, pygame.K_3]}
 
 x, y = DISPLAYSURF.get_size()
-(x, y)
 
 #Weapons
 Weapons = {}
