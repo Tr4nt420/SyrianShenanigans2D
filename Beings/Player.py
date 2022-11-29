@@ -8,7 +8,8 @@ from Layout.LayoutStuff import Layout
 textConfig = {"font" : "dejavusans",
               "appearanceTime" : 0.7,
               "fontSize" : 15,
-              "colour": (255,255,255)}
+              "colour": (255,255,255),
+              "align": None}
 pygame.font.init()
 class Player(Character):
     listOfPlayers = []
