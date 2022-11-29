@@ -32,16 +32,26 @@ x, y = DISPLAYSURF.get_size()
 
 #Weapons
 Weapons = {}
-Weapons["WeirdGun"] = lambda: Weapon("Weapons/WeirdGun/weapon.png", 0, 0, DISPLAYSURF , 
-                bullet_sprite="Weapons/WeirdGun/bullet.png", 
+Weapons["Pistol"] = lambda: Weapon("Weapons/Pistol/Pistol.png", 0, 0, DISPLAYSURF , 
+                bullet_sprite="Weapons/Pistol/bullet.png", 
                 degree = 90, 
-                rateOfFire= 860,
+                rateOfFire= 60,
                 maxDistance = 1000,
-                spread = 8 if not DEBUG else 0,
-                minDamage = 35 if not DEBUG else 999,
+                spread = 0 if not DEBUG else 0,
+                minDamage = 45 if not DEBUG else 999,
                 maxDamage = 50 if not DEBUG else 1000,
-                speed = 3000,
-                name="SomethingSomething")
+                speed = 2500,
+                name="Pistol")
+Weapons["Rifle"] = lambda: Weapon("Weapons/Rifle/Rifle.png", 0, 0, DISPLAYSURF,
+                                  bullet_sprite="Weapons/Rifle/bullet.png",
+                                  degree = 90,
+                                  rateOfFire = 860,
+                                  maxDistance= 1000,
+                                  spread=5,
+                                  minDamage=35,
+                                  maxDamage= 60,
+                                  speed=3000,
+                                  name="Rifle")
 
 pygame.display.set_caption('Syrian Shenanigans 2D')
 icon = pygame.image.load("enemy.png")
@@ -108,7 +118,8 @@ def Start():
     global isStarted
     player = Player("player.png", 9999, 9999, DISPLAYSURF)
     
-    player.equip(Weapons["WeirdGun"](), 1)
+    player.equip(Weapons["Rifle"](), 1)
+    player.equip(Weapons["Pistol"](), 2)
     player.x = ra.randint(0, x-player.ix)
     player.y = ra.randint(0, y-(player.iy*2))
     elText = f"Chances of enemies multiplying on killed: {int(chancesOfMultiplying*100)}%"
