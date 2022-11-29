@@ -120,8 +120,8 @@ def Start():
     
     player.equip(Weapons["Rifle"](), 1)
     player.equip(Weapons["Pistol"](), 2)
-    player.x = ra.randint(0, x-player.ix)
-    player.y = ra.randint(0, y-(player.iy*2))
+    player.x = ra.randint(player.ix, x-player.ix)
+    player.y = ra.randint(player.iy*2, y-(player.iy*2))
     elText = f"Chances of enemies multiplying on killed: {int(chancesOfMultiplying*100)}%"
     elTextConf = textConfig.copy()
     elTextConf["appearanceTime"] = math.inf
