@@ -38,8 +38,8 @@ Weapons["WeirdGun"] = lambda: Weapon("Weapons/WeirdGun/weapon.png", 0, 0, DISPLA
                 rateOfFire= 860,
                 maxDistance = 1000,
                 spread = 8 if not DEBUG else 0,
-                minDamage = 35,
-                maxDamage = 50,
+                minDamage = 35 if not DEBUG else 999,
+                maxDamage = 50 if not DEBUG else 1000,
                 speed = 3000,
                 name="SomethingSomething")
 
@@ -116,9 +116,12 @@ def Start():
     elTextConf["appearanceTime"] = math.inf
     elTextConf["colour"] = (0,0,0)
     elTextConf["description"] = "Chance"
-    Layout("topright",y*0.03, DISPLAYSURF, elText, **elTextConf)
+    elTextConf["align"] = "topright"
+    Layout(0,y*0.03, DISPLAYSURF, elText, **elTextConf)
     elTextConf['description'] = "FramePerSec"
-    Layout("topright", y*0.06, DISPLAYSURF, f"FPS: {int(fps)}", **elTextConf)
+    Layout(0, y*0.06, DISPLAYSURF, f"FPS: {int(fps)}", **elTextConf)
+    elTextConf["description"] = "EnemiesCount"
+    Layout(0, y*0.01, DISPLAYSURF, f"Amount of enemies killed: {str(enemyCount)}", **elTextConf)
     isStarted = True
     
 def Menu():
@@ -130,10 +133,11 @@ def Menu():
     menuConfig["appearanceTime"] = math.inf
     menuConfig["description"] = "Menu buttons"
     menuConfig["colour"] = (0,0,0)
+    menuConfig["align"] ="center" 
     #Text
     bigTextConfig = menuConfig
     bigTextConfig["fontSize"] = 32
-    bigText = Layout("center", y*0.30, DISPLAYSURF, "Syrian Shenanigans 2D", **bigTextConfig)
+    bigText = Layout(0, y*0.30, DISPLAYSURF, "Syrian Shenanigans 2D", **bigTextConfig)
 
      
     #Classic
@@ -141,7 +145,8 @@ def Menu():
     
     buttonConfig["fontSize"] = 24
     buttonConfig["colour"] = (0,255,0)
-    classicButton = Layout("center", y*0.45, DISPLAYSURF, "Play", **buttonConfig)
+    buttonConfig["align"] = "center"
+    classicButton = Layout(0, y*0.45, DISPLAYSURF, "Play", **buttonConfig)
     global isClassic
     def classic(self):
         Start()
@@ -231,7 +236,7 @@ while True:
                     
                     player.keyChange("down" if event.type == pygame.KEYDOWN else "up", event.key)            
             if event.type == pygame.KEYDOWN:
-                if event.key == allowedInput["spawnNewEnemy"] and isEndless:
+                if event.key == allowedInput["spawnNewEnemy"] and not isEndless:
                     spawnEnemy()
                 elif event.key == allowedInput["dropWeapon"]:
                     player.drop()
@@ -291,15 +296,13 @@ while True:
     for t in Layout.listOfLayouts:
         if t.description == "Chance":
             t.textContent = f"Chances of enemies multiplying on killed: {int(chancesOfMultiplying*100)}%"
-        elif t.description == "FramePerSec":
+        if t.description == "FramePerSec":
             t.textContent = f"FPS: {int(fps)}"
-        #print(t.textContent)
+        if t.description=="EnemiesCount":
+            t.textContent = f"Amount of enemies killed: {str(enemyCount)}"
         t.update()
-    #health and enemy counter
+
     if isStarted and player:
-        label = scoreCount.render(f"Amount of enemies killed: {str(enemyCount)}", True, (0,0,0))
-        lx, ly = label.get_size()
-        DISPLAYSURF.blit(label, (x-lx,0))
         healthLabel = healthCount.render(f"Health: {player.health}", True, (255,0,0))
         DISPLAYSURF.blit(healthLabel, (0,0))
 

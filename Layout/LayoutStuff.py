@@ -20,6 +20,7 @@ class Layout(object):
         self.onClicked = None
         self.size = pygame.font.Font.size(self.fontObj, self.textContent)
         self.description = kwargs["description"] if "description" in kwargs else None
+        self.align = kwargs["align"]
         if "noAdd" not in kwargs:
             Layout.listOfLayouts.append(self)
 
@@ -44,9 +45,9 @@ class Layout(object):
 
     def update(self):
         fontSurf = self.fontObj.render(self.textContent, True, self.colour)
-        if self.x == "center":
+        if self.align == "center":
            self.x = self.screen.get_size()[0]/2-(self.size[0]/2)
-        elif self.x == "topright":
+        elif self.align == "topright":
             self.x = self.screen.get_size()[0]-self.size[0]
 
 
@@ -54,6 +55,8 @@ class Layout(object):
         if (time.time()-self.tick) >= self.appearanceTime:
             Layout.remove(self)
         self.rect = fontSurf.get_rect(topleft=(self.x,self.y))
+        self.size = pygame.font.Font.size(self.fontObj, self.textContent)
+
 
 
 
