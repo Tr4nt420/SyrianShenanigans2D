@@ -41,7 +41,6 @@ class Character(Instance):
                         colourDict[i] = 255
                     else:
                         colourDict[i]+=value
-
                 self.image.set_at((x, y), (colourDict["r"], colourDict["g"],colourDict["b"], colourDict["a"]))
 
     def return_old_colour(self, oldColourDict):
@@ -54,13 +53,9 @@ class Character(Instance):
     def deal_damage(self, damage):
         self.health -= damage
         if not self.tagged and time.time()-self.stopFillTime >= self.blinkTime:
-            self.set_colour(65, ["r"])
-
-
+            self.set_colour(65 if not "Player" in str(self) else 100, ["r"])
             self.stopFillTime = time.time()+self.blinkTime
-
             self.tagged = True
-
         if len(self.textList) < self.maxTextDamage:
             font = pygame.font.SysFont("dejavusans", 16)
             self.newAppearedText = font.render(str(damage), True, (255,0,0))

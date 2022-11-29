@@ -21,7 +21,7 @@ class Player(Character):
         self.left = False
         self.right = False
         self.currentWeapon = None
-        self.health = 100
+        self.health = 200
         self.speed = 75
         self.lastDropped = {}
         self.dropPickUpDelay = 3
@@ -100,18 +100,17 @@ class Player(Character):
     def update(self, dt):
         super().update(dt)
         listOfCollidedWeapons = pygame.sprite.spritecollide(self, Weapon.listOfWeapons, False)
-        if not self.currentWeapon:
-            for i in [i for i in listOfCollidedWeapons if i != self.currentWeapon and i.isDropped]:
-                if isinstance(i, Weapon):
-                    if i not in self.lastDropped or (time.time() - self.lastDropped[i]) >= self.dropPickUpDelay:
-                        for sn in range(1, len(self.equipSlots)):
-                            if self.equipSlots[sn] == None:
-                                self.equip(i, sn)
-                                notificePickup = notificePickup = Layout(0, self.sy*0.9, self.screen, f"You have picked up {i.name}", **textConfig, noAdd=True)
-                                notificePickup.x = (self.sx/2)-(notificePickup.get_size()[0]/2)
-                                Layout.listOfLayouts.append(notificePickup)
+        for i in [i for i in listOfCollidedWeapons if i != self.currentWeapon and i.isDropped]:
+            if isinstance(i, Weapon):
+                if i not in self.lastDropped or (time.time() - self.lastDropped[i]) >= self.dropPickUpDelay:
+                    for sn in range(1, len(self.equipSlots)):
+                        if self.equipSlots[sn] == None:
+                            self.equip(i, sn)
+                            notificePickup = notificePickup = Layout(0, self.sy*0.9, self.screen, f"You have picked up {i.name}", **textConfig, noAdd=True)
+                            notificePickup.x = (self.sx/2)-(notificePickup.get_size()[0]/2)
+                            Layout.listOfLayouts.append(notificePickup)
 
-                                break
+                            break
         if self.health <= 0:
 
             self.kill()
