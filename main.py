@@ -91,6 +91,7 @@ def spawnEnemy():
         w.spread = 10 # otherwise they would be too accurate
         w.projectTileSpeed=1000
         w.rateOfFire = 30
+        w.maxDistance = 500
         w.name = "ePistol"
         enemy.equip(w, 1)
 
