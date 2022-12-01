@@ -1,12 +1,13 @@
 # SyrianShenanigans2D
 My first ever game made with Pygame lol more to come and have fun.
 
-You must have Pygame installed in order to play:
+Before playing, make sure you have pygame installed:
 ```
 python3 -m pip install pygame
 ```
 
-```git clone https://github.com/Tr4nt420/SyrianShenanigans2D
+```
+git clone https://github.com/Tr4nt420/SyrianShenanigans2D
 cd SyrianShenanigans2D
 python3 main.py
 ```
