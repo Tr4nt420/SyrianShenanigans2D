@@ -89,7 +89,7 @@ def spawnEnemy():
     if per <= spawningWithGunChance:
         w = Weapons["Pistol"]()
         w.spread = 10 # otherwise they would be too accurate
-        w.projectTileSpeed/=10
+        w.projectTileSpeed=100
         w.name = "ePistol"
         enemy.equip(w, 1)
 
