@@ -1,6 +1,7 @@
 import pygame
 from Beings.Instances import Instance
 from Beings.Character import Character
+from Tools.Weapon import Weapon
 from Beings.Player import Player
 from Utils.Utils import *
 import math
@@ -28,6 +29,12 @@ class Enemy(Character):
         if player:
             if len(listOfCols) < 1:
                 dx, dy = get_direction(player.x, self.x, player.y, self.y)
+                if not self.currentWeapon:
+                    for i in Weapon.listOfWeapons:
+                        if not i.parent and i.pickingUp == None or i.pickingUp == self and i.isDropped:
+                            i.pickingUp = self
+                            dx, dy = get_direction(i.x, self.x, i.y, self.y)
+                            break
                 self.x += dx*self.speed*dt
                 self.y += dy*self.speed*dt
             else:
@@ -48,6 +55,8 @@ class Enemy(Character):
     def update(self, dt):
         players = [i for i in Instance.listOfInstances if isinstance(i, Player)]
         players = {distance(self.x,i.x,self.y,i.y):i for i in players}
+        if len(players) < 1:
+            return
         self.target = players[min(set(list(players)))]
         player = self.target
         listOfCols = pygame.sprite.spritecollide(self, Player.listOfPlayers, False)

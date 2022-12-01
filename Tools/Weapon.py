@@ -33,6 +33,7 @@ class Weapon(Instance):
         self.maxDamage = kwargs["maxDamage"]
         self.name = kwargs["name"]
         self.isFlipped = False
+        self.pickingUp = None
         Weapon.listOfWeapons.append(self)
 
 
