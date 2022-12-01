@@ -1,13 +1,16 @@
-import Beings
-from Beings.Character import *
+import pygame
+from Beings.Instances import Instance
+from Beings.Character import Character
 from Beings.Player import Player
 from Utils.Utils import *
 import math
 
 import time
 
+
 class Enemy(Character):
     listOfEnemies = []
+
     def __init__(self, image: str, x: int, y: int, screen):
         super().__init__(image, x, y, screen)
         self.speed = 50
@@ -15,8 +18,9 @@ class Enemy(Character):
         self.damage = 25
         self.damageDelayTime = 3
         self.lastTimeDealtDamage = 0
+        self.equipSlots = {1: None}
+        self.target = None
         Enemy.listOfEnemies.append(self)
-
 
     def move_towards_player(self, player, dt):
         group = [i for i in Enemy.listOfEnemies if i != self]
@@ -35,21 +39,46 @@ class Enemy(Character):
                             self.lastTimeDealtDamage = time.time()
 
                     else:
-                        ptcx, ptcy = get_direction(player.x ,i.x, player.y, i.y)
+                        ptcx, ptcy = get_direction(player.x, i.x, player.y, i.y)
                         self.x += ptcx*self.speed*dt
                         self.y += ptcy*self.speed*dt
                 # self.x += -dx*self.speed*dt
                 # self.y += -dy*self.speed*dt
 
     def update(self, dt):
+        players = [i for i in Instance.listOfInstances if isinstance(i, Player)]
+        players = {distance(self.x,i.x,self.y,i.y):i for i in players}
+        self.target = players[min(set(list(players)))]
+        player = self.target
+        listOfCols = pygame.sprite.spritecollide(self, Player.listOfPlayers, False)
+        for i in listOfCols:
+            if isinstance(i, Player):
+                if player.up:
+                    if self.y < player.y and self.x-player.x < self.ix/1.5: # The less the number after "<" is, the more
+                                                                            # the enemy is going to be pushed, set to 0
+                                                                            # and then he can be push anywhere
+                        self.y -= player.speed*dt
+                if player.down:
+                    if self.y > player.y and self.x-player.x < self.ix/1.5:
+                        self.y += player.speed*dt
+                if player.left:
+                    if self.x < player.x and (self.y-player.y) < self.iy/2.5:
+                        self.x -= player.speed*dt
+                if player.right:
+                    if self.x > player.x and (self.y-player.y) < self.iy/2.5:
+                        self.x += player.speed*dt
+                break
+        if self.currentWeapon and player:
+            dis = distance(self.x, player.x, self.y, player.y)
+            if dis <= self.currentWeapon.maxDistance:
+                self.currentWeapon.shoot((player.x, player.y))
+            else:
+                self.move_towards_player(self.target, dt)
+
         super().update(dt)
-        if self.health <= 0:
-            self.kill()
+
 
     def kill(self):
         if self in Enemy.listOfEnemies:
             Enemy.listOfEnemies.remove(self)
         super().kill()
-
-
-

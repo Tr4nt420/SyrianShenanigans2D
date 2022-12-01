@@ -1,7 +1,8 @@
-import Beings
-from Beings.Instances import *
+from Beings.Instances import Instance
 
 from Tools.Projectile import Projectile
+import Tools
+import Beings
 
 import random as ran
 
@@ -46,7 +47,7 @@ class Weapon(Instance):
             newProjectile = Projectile(self.bullet_sprite, xPos, yPos, self.screen,
                                        dx+spread, dy+spread, self.maxDistance)
 
-            newProjectile.image = pygame.transform.rotate(newProjectile.originalimage, math.degrees(math.atan2(dx,dy))+self.degree)
+            newProjectile.image = pygame.transform.rotate(newProjectile.originalimage, math.degrees(math.atan2(dx+spread,dy+spread))+self.degree)
             self.listOfProjectiles.append(newProjectile)
             self.lastTimeFired = now
 
@@ -60,14 +61,16 @@ class Weapon(Instance):
                 self.listOfProjectiles.remove(p)
                 p.kill()
             if len(listOfCols) > 0 or math.hypot(self.x-p.x, self.y-p.y) > p.maxDistance:
-                removeBullet()
+                if self.parent not in listOfCols:
+                    removeBullet()
 
             for i in listOfCols:
-                damage = ran.randint(self.minDamage, self.maxDamage)
-                i.deal_damage(damage)
+                if i != self.parent:
+                    damage = ran.randint(self.minDamage, self.maxDamage)
+                    i.deal_damage(damage)
 
-                if i.health <= 0:
-                    collideGroup.remove(i)
+                    if i.health <= 0:
+                        collideGroup.remove(i)
 
     def update_to_parent(self):
         if self.parent:
@@ -95,6 +98,14 @@ class Weapon(Instance):
 
         if self.isDropped:
             super().update(dt)
+
+    def rotate_to_mouse(self, mouseLocation):
+        n = [mouseLocation[0], mouseLocation[1]]
+        if isinstance(self, Tools.Weapon.Weapon):
+            if isinstance(self.parent, Beings.Enemy.Enemy):
+                n[0], n[1] = self.parent.target.x, self.parent.target.y
+        super().rotate_to_mouse(n)
+
 
 
 

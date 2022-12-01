@@ -7,3 +7,6 @@ def get_direction(x1,x2,y1,y2):
 
 def normalize(value, min, max):
     return (value-min)/(max-min)
+
+def distance(x1, x2, y1, y2):
+    return math.sqrt(math.pow(x1-x2, 2)+ math.pow(y1-y2,2))
