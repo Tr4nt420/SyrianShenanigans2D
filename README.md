@@ -3,8 +3,9 @@ My first ever game made with Pygame lol more to come and have fun.
 
 Before playing, make sure you have pygame installed:
 ```
-python3 -m pip install pygame
+python3 -m pip install Pygame
 ```
+
 
 ```
 git clone https://github.com/Tr4nt420/SyrianShenanigans2D
